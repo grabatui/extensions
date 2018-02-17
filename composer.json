@@ -15,7 +15,5 @@
     "arrilot/bitrix-migrations": "^2.3",
     "itgro/installer": "*",
     "maximaster/tools.twig": "^1.1"
-  },
-  "prefer-stable": true,
-  "minimum-stability": "dev"
+  }
 }
