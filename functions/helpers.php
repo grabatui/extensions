@@ -3,12 +3,19 @@
 use Bitrix\Highloadblock\DataManager;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
+use Bitrix\Main\LoaderException;
+use Bitrix\Main\SystemException;
 use Itgro\Bitrix\HighloadIblock;
 use Itgro\Bitrix\Iblock;
 use Itgro\Bitrix\Module;
 use Itgro\Bitrix\Property;
 
 if (!function_exists('include_file')) {
+    /**
+     * Простое подключение файла
+     *
+     * @param string $path
+     */
     function include_file($path)
     {
         include(sprintf('%s/%s', $_SERVER['DOCUMENT_ROOT'], $path));
@@ -16,6 +23,14 @@ if (!function_exists('include_file')) {
 }
 
 if (!function_exists('include_editable_file')) {
+    /**
+     * Подключение редактируемого файла
+     *
+     * @param string $path
+     * @param string $mode
+     * @param array $params
+     * @return mixed
+     */
     function include_editable_file($path, $mode = 'html', $params = [])
     {
         global $APPLICATION;
@@ -25,6 +40,13 @@ if (!function_exists('include_editable_file')) {
 }
 
 if (!function_exists('get_iblock_id')) {
+    /**
+     * ID ИБ по коду
+     *
+     * @param string $code
+     * @return int
+     * @throws LoaderException
+     */
     function get_iblock_id($code)
     {
         if (!Loader::includeModule('itgro')) {
@@ -36,6 +58,13 @@ if (!function_exists('get_iblock_id')) {
 }
 
 if (!function_exists('get_highload_iblock_id')) {
+    /**
+     * ID Highload-ИБ по имени
+     *
+     * @param string $name
+     * @return int
+     * @throws LoaderException
+     */
     function get_highload_iblock_id($name)
     {
         if (!Loader::includeModule('itgro')) {
@@ -47,6 +76,14 @@ if (!function_exists('get_highload_iblock_id')) {
 }
 
 if (!function_exists('get_property_id')) {
+    /**
+     * ID свойства по его коду и, если хочется, по коду/ID ИБ
+     *
+     * @param string $propertyCode
+     * @param string|null $iBlockCode
+     * @return int
+     * @throws LoaderException
+     */
     function get_property_id($propertyCode, $iBlockCode = null)
     {
         if (!Loader::includeModule('itgro')) {
@@ -58,6 +95,14 @@ if (!function_exists('get_property_id')) {
 }
 
 if (!function_exists('get_highload_iblock_entity')) {
+    /**
+     * Экземпляр ORM-сущности некоего Highload-ИБ
+     *
+     * @param string $name
+     * @return DataManager
+     * @throws LoaderException
+     * @throws SystemException
+     */
     function get_highload_iblock_entity($name): DataManager
     {
         if (!Loader::includeModule('highloadblock')) {
@@ -80,13 +125,44 @@ if (!function_exists('get_highload_iblock_entity')) {
 }
 
 if (!function_exists('array_get')) {
+    /**
+     * Элемент массива по ключу.
+     * Есть возможность использовать dot-нотацию (т.е. по ключу `foo.bar` из массива `['foo' => ['bar' => 10]]` достанется 10)
+     *
+     * @param array $array
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed|null
+     */
     function array_get($array, $key, $default = null)
     {
-        return (is_array($array) && array_key_exists($key, $array)) ? $array[$key] : $default;
+        if (!is_array($array)) {
+            return $default;
+        }
+
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+
+        $result = $array;
+        foreach (explode('.', $key) as $innerKey) {
+            if (is_array($result) && array_key_exists($innerKey, $result)) {
+                $result = $result[$innerKey];
+            } else {
+                return $default;
+            }
+        }
+
+        return $result;
     }
 }
 
 if (!function_exists('abort_404')) {
+    /**
+     * Битриксовский выброс 404ой ошибки
+     *
+     * @return void
+     */
     function abort_404()
     {
         if (CHTTP::GetLastStatus() === 404) {
@@ -102,6 +178,13 @@ if (!function_exists('abort_404')) {
 }
 
 if (!function_exists('only_digits')) {
+    /**
+     * Исключительно цифры из любой строки
+     *
+     * @param string $string
+     * @param int|null $length
+     * @return string
+     */
     function only_digits(string $string, $length = null): string
     {
         preg_match_all('/\d+/', $string, $matches);
@@ -117,6 +200,12 @@ if (!function_exists('only_digits')) {
 }
 
 if (!function_exists('convert_to_phone')) {
+    /**
+     * Превращение телефона в формат +7 (999) 999-99-99
+     *
+     * @param string $rawPhone
+     * @return string
+     */
     function convert_to_phone(string $rawPhone): string
     {
         $phone = only_digits($rawPhone, 10);
@@ -142,6 +231,12 @@ if (!function_exists('convert_to_phone')) {
 }
 
 if (!function_exists('camel_to_snake')) {
+    /**
+     * CamelCase -> snake_case
+     *
+     * @param string $camel
+     * @return string
+     */
     function camel_to_snake(string $camel): string
     {
         preg_match_all('/([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)/', $camel, $matches);
@@ -162,6 +257,11 @@ if (!function_exists('camel_to_snake')) {
 }
 
 if (!function_exists('pre')) {
+    /**
+     * Дебажная распечатка
+     *
+     * @param mixed $value
+     */
     function pre($value)
     {
         echo '<pre>';
@@ -171,6 +271,11 @@ if (!function_exists('pre')) {
 }
 
 if (!function_exists('dd')) {
+    /**
+     * Дебажная распечатка со смертью скрипта
+     *
+     * @param mixed $value
+     */
     function dd($value)
     {
         pre($value);
@@ -179,6 +284,13 @@ if (!function_exists('dd')) {
 }
 
 if (!function_exists('parse_url_query')) {
+    /**
+     * Распрарсивает query-строку в массив (`foo=bar&baz=3` -> `['foo' => 'bar', 'baz' => '3']`)
+     * Внимание! Не поддерживаются сложные элементы типа `foo[]=bar`
+     *
+     * @param string $url
+     * @return array
+     */
     function parse_url_query(string $url): array
     {
         $url = parse_url($url, PHP_URL_QUERY);
@@ -236,6 +348,11 @@ if (!function_exists('get_ip')) {
 }
 
 if (!function_exists('expand_variable')) {
+    /**
+     * @param array|mixed $original
+     * @param array|mixed $expansion
+     * @return array
+     */
     function expand_variable($original, $expansion)
     {
         if (!is_array($original)) {
@@ -251,6 +368,11 @@ if (!function_exists('expand_variable')) {
 }
 
 if (!function_exists('end_with')) {
+    /**
+     * @param string $string
+     * @param int $length
+     * @return string
+     */
     function end_with_ellipsis($string, $length = null)
     {
         if (!$string) {
@@ -270,6 +392,12 @@ if (!function_exists('end_with')) {
 }
 
 if (!function_exists('get_files')) {
+    /**
+     * Файлы по их ID
+     *
+     * @param int|array $fileIds
+     * @return array
+     */
     function get_files($fileIds)
     {
         if (!$fileIds) {
@@ -300,6 +428,12 @@ if (!function_exists('get_files')) {
 }
 
 if (!function_exists('get_file')) {
+    /**
+     * Массив файла по его ID
+     *
+     * @param int $id
+     * @return mixed|null
+     */
     function get_file($id)
     {
         $files = get_files([$id]);
@@ -309,6 +443,16 @@ if (!function_exists('get_file')) {
 }
 
 if (!function_exists('check_modules')) {
+    /**
+     * Проверка модулей
+     * Если $throwable - true, выкинется исключение с ошибками. Иначе - вернётся массив с ними же
+     *
+     * @param string|array $modules
+     * @param bool $throwable
+     * @return array
+     * @throws Exception
+     * @throws LoaderException
+     */
     function check_modules($modules, $throwable = true)
     {
         // Замнкутный круг - чтобы использовать соответствующий метод класса модуля, нужно проверить сначала модуль
@@ -321,6 +465,12 @@ if (!function_exists('check_modules')) {
 }
 
 if (!function_exists('get_file_link_with_time')) {
+    /**
+     * Добавлят к ссылке метку времени последнего изменения этого файла (чтобы корректно работло кеширование в определённых случаях)
+     *
+     * @param string $link
+     * @return string
+     */
     function get_file_link_with_time($link)
     {
         return sprintf('%s?t=%s', $link, filemtime($_SERVER['DOCUMENT_ROOT'] . $link));

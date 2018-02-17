@@ -74,14 +74,16 @@ class extensions extends CModule
 
     private function switchEvents($install = true)
     {
+        $eventManager = \Bitrix\Main\EventManager::getInstance();
+
         foreach ($this->events as $moduleName => $moduleEvents) {
             foreach ($moduleEvents as $eventName => $eventClasses) {
                 foreach ($eventClasses as $eventClass) {
                     list($class, $method) = $eventClass;
 
                     ($install) ?
-                        event_manager()->registerEventHandler($moduleName, $eventName, $this->MODULE_ID, $class, $method) :
-                        event_manager()->unRegisterEventHandler($moduleName, $eventName, $this->MODULE_ID, $class, $method);
+                        $eventManager->registerEventHandler($moduleName, $eventName, $this->MODULE_ID, $class, $method) :
+                        $eventManager->unRegisterEventHandler($moduleName, $eventName, $this->MODULE_ID, $class, $method);
                 }
             }
         }
