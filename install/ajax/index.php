@@ -9,7 +9,7 @@ if (!\Bitrix\Main\Loader::includeModule('itgro')) {
 }
 
 try {
-    $result = \Itgro\Ajax\Distributor::getFromRequest();
+    $result = \Itgro\Ajax\Distributor::handleFromRequest();
 } catch (Throwable $exception) {
     $result = $exception->getMessage();
 }

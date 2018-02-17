@@ -2,6 +2,7 @@
   "name": "itgro/extensions",
   "description": "Помощник при работе с 1С-Битрикс",
   "license": "MIT",
+  "version": "1.0.4",
   "type": "itgro-module",
   "authors": [
     {

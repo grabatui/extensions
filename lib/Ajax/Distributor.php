@@ -19,7 +19,7 @@ class Distributor
         $handler = array_shift($parts);
         $method = array_shift($parts);
 
-        self::handle($handler, $method, $parts);
+        return self::handle($handler, $method, $parts);
     }
 
     /**

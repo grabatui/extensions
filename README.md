@@ -26,4 +26,15 @@ array(
 
 * `\Itgro\Mail` - отправитель писем как через шаблоны Битрикс, так и через обычную отправку;
 
-
+* Возможность добавить свои ajax-обработчики посредством навешивания обработчиков на `\Itgro\Ajax\Ditributor::CREATE_HANDLERS_LIST_EVENT`:
+```
+/**
+ * В этом примере будут доступны запросы вида `/ajax/feedback/%method%/`,
+ * каждый из которых будет делигироваться в соответствующий класс на соответствующий метод
+ */
+event_manager()->addEventListener('extensions', \Itgro\Ajax\Ditributor::CREATE_HANDLERS_LIST_EVENT, function (\Bitrix\Main\Event $event) {
+    return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
+        'feedback' => \Namespace\Some\Class::class,
+    ]);
+})
+``` 
