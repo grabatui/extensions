@@ -11,9 +11,9 @@
     }
   ],
   "require": {
-    "php": "^7.0.0",
+    "php": ">=7.0.0",
     "arrilot/bitrix-migrations": "^2.3",
-    "itgro/installer": "*",
+    "itgro/installer": "*@dev",
     "maximaster/tools.twig": "^1.1"
   }
 }
