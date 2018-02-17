@@ -57,7 +57,6 @@ class extensions extends CModule
 
     public function InstallFiles()
     {
-        // TODO: Продумать как заполнять список дистрибьюторов
         // TODO: Перенести остальные классы и проверить уже перенесенные
 
         CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components');
