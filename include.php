@@ -1,0 +1,42 @@
+<?php
+
+use Bitrix\Main\Loader;
+
+$prefix = '\Itgro';
+$parent = 'lib/';
+$module = 'itgro';
+
+function getDirectoryChildren($directory, $parentDirectory)
+{
+    $fullParentPath = sprintf('%s/%s/%s/', __DIR__, $parentDirectory, $directory);
+
+    $result = [];
+    foreach (scandir($fullParentPath) as $child) {
+        if ($child == '.' || $child == '..') {
+            continue;
+        }
+
+        $fullChildPath = sprintf('%s/%s', $fullParentPath, $child);
+        $childPath = str_replace('//', '/', sprintf('%s/%s', $directory, $child));
+
+        if (is_dir($fullChildPath)) {
+            $result = array_merge($result, getDirectoryChildren($childPath, $parentDirectory));
+        } else {
+            $result[] = $childPath;
+        }
+    }
+
+    return $result;
+}
+
+$formattedClassFiles = [];
+foreach (getDirectoryChildren('', $parent) as $classFile) {
+    $class = $prefix . str_replace('/', '\\', $classFile);
+    $class = substr($class, 0, strpos($class, '.'));
+
+    $formattedClassFiles[$class] = str_replace('//', '/', $parent . $classFile);
+}
+
+Loader::registerAutoLoadClasses($module, $formattedClassFiles);
+
+require_once('prolog.php');
