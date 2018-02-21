@@ -4,7 +4,7 @@ use Bitrix\Main\Loader;
 
 $prefix = '\Itgro';
 $parent = 'lib/';
-$module = 'itgro';
+$module = 'extensions';
 
 function getDirectoryChildren($directory, $parentDirectory)
 {

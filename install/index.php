@@ -57,8 +57,6 @@ class extensions extends CModule
 
     public function InstallFiles()
     {
-        // TODO: Перенести остальные классы и проверить уже перенесенные
-
         CopyDirFiles(__DIR__ . '/components', $_SERVER['DOCUMENT_ROOT'] . '/local/components');
         CopyDirFiles(__DIR__ . '/ajax', $_SERVER['DOCUMENT_ROOT'] . '/ajax');
     }

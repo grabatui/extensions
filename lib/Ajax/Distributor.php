@@ -4,12 +4,13 @@ namespace Itgro\Ajax;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
+use Itgro\WithExpandableHandlers;
 
 class Distributor
 {
-    const CREATE_HANDLERS_LIST_EVENT = 'onCreateAjaxHandlersList';
+    use WithExpandableHandlers;
 
-    protected $handlers = [];
+    const EXPAND_HANDLERS_EVENT = 'onCreateAjaxHandlersList';
 
     public static function handleFromRequest()
     {
@@ -48,33 +49,5 @@ class Distributor
         }
 
         return call_user_func_array([$handler, $method], $arguments);
-    }
-
-    public function getHandlers()
-    {
-        $handlers = $this->handlers;
-
-        $event = new Event('extensions', self::CREATE_HANDLERS_LIST_EVENT);
-        $event->send();
-
-        if (!$event->getResults()) {
-            return $handlers;
-        }
-
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() !== EventResult::SUCCESS) {
-                continue;
-            }
-
-            $newHandlers = $eventResult->getParameters();
-
-            if (!is_array($newHandlers) || empty($newHandlers)) {
-                continue;
-            }
-
-            $handlers = array_merge($handlers, $newHandlers);
-        }
-
-        return $handlers;
     }
 }

@@ -4,15 +4,25 @@ namespace Itgro\Twig;
 
 use Bitrix\Main\EventResult;
 use Exception;
+use Itgro\Twig\Extension\Filters;
+use Itgro\Twig\Extension\Functions;
+use Itgro\WithExpandableHandlers;
 use Twig_Environment;
 
 class Extension
 {
-    public static $handlers = [];
+    use WithExpandableHandlers;
+
+    const EXPAND_HANDLERS_EVENT = 'onCreateTwigExtensionsList';
+
+    public static $handlers = [
+        Functions::class,
+        Filters::class,
+    ];
 
     public static function expand(Twig_Environment $engine)
     {
-        foreach (self::$handlers as $handler) {
+        foreach ((new self)->getHandlers() as $handler) {
             try {
                 $handler = new $handler();
 

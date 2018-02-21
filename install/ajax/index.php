@@ -4,7 +4,7 @@ if (mb_strtolower(array_get($_SERVER, 'HTTP_X_REQUESTED_WITH', '')) !== 'xmlhttp
     abort_404();
 }
 
-if (!\Bitrix\Main\Loader::includeModule('itgro')) {
+if (!\Bitrix\Main\Loader::includeModule('extensions')) {
     die(json_encode('Ошибка во время подключения модуля Айтигро'));
 }
 

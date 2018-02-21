@@ -26,15 +26,31 @@ array(
 
 * `\Itgro\Mail` - отправитель писем как через шаблоны Битрикс, так и через обычную отправку;
 
-* Возможность добавить свои ajax-обработчики посредством навешивания обработчиков на `\Itgro\Ajax\Ditributor::CREATE_HANDLERS_LIST_EVENT`:
+* `\Itgro\Entity\IBlock\Base` - абстрактный класс для более удобной работы с `CIBlockElement`
+
+* `\Itgro\Entity\IBlock\Entity` - абстрактный класс (с предыдущим в качестве родительского), позволяющий каждый элемент возвращаемого массива использовать как объект
+
+* Возможность добавить свои ajax-обработчики посредством навешивания обработчиков на `\Itgro\Ajax\Distributor::EXPAND_HANDLERS_EVENT`:
 ```php
 /**
  * В этом примере будут доступны запросы вида `/ajax/feedback/%method%/`,
  * каждый из которых будет делигироваться в соответствующий класс на соответствующий метод
  */
-event_manager()->addEventListener('extensions', \Itgro\Ajax\Ditributor::CREATE_HANDLERS_LIST_EVENT, function (\Bitrix\Main\Event $event) {
+event_manager()->addEventHandler('extensions', \Itgro\Ajax\Distributor::EXPAND_HANDLERS_EVENT, function (\Bitrix\Main\Event $event) {
     return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
         'feedback' => \Namespace\Some\Class::class,
     ]);
 })
 ``` 
+
+* Возможность добавить свои функции для Twig'а посредством навешивания обработчиков на `\Itgro\Twig\Extension\Functions::EXPAND_HANDLERS_EVENT`:
+```php
+event_manager()->addEventHandler('extensions', \Itgro\Twig\Extension\Functions::CREATE_HANDLERS_LIST_EVENT, function (\Bitrix\Main\Event $event) {
+    return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
+        'foo_func' => ['\Namespace\Some\Class::class', 'fooFunc'],
+        'bar_func' => ['\Namespace\Some\Second\Class::class', 'barFunc'],
+    ]);
+})
+``` 
+
+* Возможность добавить свои фильтры для Twig'а посредством навешивания обработчиков на `\Itgro\Twig\Extension\Filters::EXPAND_HANDLERS_EVENT`. Код будет выглядеть примерно как в коде выше.
