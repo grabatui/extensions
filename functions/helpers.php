@@ -182,6 +182,7 @@ if (!function_exists('abort_404')) {
 if (!function_exists('only_digits')) {
     /**
      * Исключительно цифры из любой строки
+     * При отрицательном занчении $length - цифры будут обрезаться с конца строки
      *
      * @param string $string
      * @param int|null $length
@@ -197,18 +198,27 @@ if (!function_exists('only_digits')) {
             return $digits;
         }
 
-        return substr($digits, 0, $length);
+        return ($length > 0) ?
+            substr($digits, 0, $length) : // Первые n
+            substr($digits, $length); // Последние n
     }
 }
 
 if (!function_exists('convert_to_phone')) {
     /**
-     * Превращение телефона в формат +7 (999) 999-99-99
+     * Форматирование передаваемого телефона в другой формат
+     * По-умолчанию формат +7 (999) 999-99-99
      *
      * @param string $rawPhone
+     * @param string $format
+     * @param string $regExp
      * @return string
      */
-    function convert_to_phone(string $rawPhone): string
+    function convert_to_phone(
+        string $rawPhone,
+        string $format = '+7 (%s) %s-%s-%s',
+        string $regExp = '(\d{3})(\d{3})(\d{2})(\d{2})'
+    ): string
     {
         $phone = only_digits($rawPhone, 10);
 
@@ -216,7 +226,7 @@ if (!function_exists('convert_to_phone')) {
             return $rawPhone;
         }
 
-        preg_match('/(\d{3})(\d{3})(\d{2})(\d{2})/', $phone, $matches);
+        preg_match(sprintf('/%s/', $regExp), $phone, $matches);
 
         if (is_array($matches)) {
             array_shift($matches);
@@ -224,11 +234,13 @@ if (!function_exists('convert_to_phone')) {
 
         $matches = array_values(array_filter($matches));
 
-        if (empty($matches) || count($matches) !== 4) {
+        if (empty($matches)) {
             return $rawPhone;
         }
 
-        return sprintf('+7 (%s) %s-%s-%s', $matches[0], $matches[1], $matches[2], $matches[3]);
+        array_unshift($matches, $format);
+
+        return call_user_func_array('sprintf', $matches);
     }
 }
 
