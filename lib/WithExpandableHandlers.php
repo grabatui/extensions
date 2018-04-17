@@ -6,8 +6,6 @@ trait WithExpandableHandlers
 {
     protected $expandHandlersEventName;
 
-    protected $handlers = [];
-
     public function getHandlers()
     {
         if (!defined('self::EXPAND_HANDLERS_EVENT')) {

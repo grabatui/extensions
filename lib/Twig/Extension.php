@@ -2,6 +2,7 @@
 
 namespace Itgro\Twig;
 
+use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 use Exception;
 use Itgro\Twig\Extension\Filters;
@@ -20,8 +21,14 @@ class Extension
         Filters::class,
     ];
 
-    public static function expand(Twig_Environment $engine)
+    public static function expand($engine)
     {
+        if ($engine instanceof Event) {
+            $engine = reset($engine->getParameters());
+        }
+
+        /** @var Twig_Environment $engine */
+
         foreach ((new self)->getHandlers() as $handler) {
             try {
                 $handler = new $handler();
