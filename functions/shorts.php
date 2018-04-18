@@ -30,6 +30,15 @@ if (!function_exists('application')) {
     }
 }
 
+if (!function_exists('user')) {
+    function user(): CUser
+    {
+        global $USER;
+
+        return $USER;
+    }
+}
+
 if (!function_exists('buffer_view')) {
     function buffer_view(): BufferView
     {

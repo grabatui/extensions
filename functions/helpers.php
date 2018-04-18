@@ -470,7 +470,7 @@ if (!function_exists('check_modules')) {
     function check_modules($modules, $throwable = true)
     {
         // Замнкутный круг - чтобы использовать соответствующий метод класса модуля, нужно проверить сначала модуль
-        if (!Loader::includeModule('itgro')) {
+        if (!Loader::includeModule('extensions')) {
             return [];
         }
 

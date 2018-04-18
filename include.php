@@ -6,27 +6,34 @@ $prefix = '\Itgro';
 $parent = 'lib/';
 $module = 'extensions';
 
-function getDirectoryChildren($directory, $parentDirectory)
-{
-    $fullParentPath = sprintf('%s/%s/%s/', __DIR__, $parentDirectory, $directory);
+global $dir;
+$dir = __DIR__;
 
-    $result = [];
-    foreach (scandir($fullParentPath) as $child) {
-        if ($child == '.' || $child == '..') {
-            continue;
+if (!function_exists('getDirectoryChildren')) {
+    function getDirectoryChildren($directory, $parentDirectory)
+    {
+        global $dir;
+
+        $fullParentPath = sprintf('%s/%s/%s/', $dir, $parentDirectory, $directory);
+
+        $result = [];
+        foreach (scandir($fullParentPath) as $child) {
+            if ($child == '.' || $child == '..') {
+                continue;
+            }
+
+            $fullChildPath = sprintf('%s/%s', $fullParentPath, $child);
+            $childPath = str_replace('//', '/', sprintf('%s/%s', $directory, $child));
+
+            if (is_dir($fullChildPath)) {
+                $result = array_merge($result, getDirectoryChildren($childPath, $parentDirectory));
+            } else {
+                $result[] = $childPath;
+            }
         }
 
-        $fullChildPath = sprintf('%s/%s', $fullParentPath, $child);
-        $childPath = str_replace('//', '/', sprintf('%s/%s', $directory, $child));
-
-        if (is_dir($fullChildPath)) {
-            $result = array_merge($result, getDirectoryChildren($childPath, $parentDirectory));
-        } else {
-            $result[] = $childPath;
-        }
+        return $result;
     }
-
-    return $result;
 }
 
 $formattedClassFiles = [];

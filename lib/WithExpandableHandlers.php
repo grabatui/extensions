@@ -12,6 +12,8 @@ trait WithExpandableHandlers
             return $this->handlers;
         }
 
+        $this->handlers = (!is_array($this->handlers)) ? [] : $this->handlers;
+
         return array_merge(
             $this->handlers,
             collect_event_handlers('extensions', self::EXPAND_HANDLERS_EVENT)
