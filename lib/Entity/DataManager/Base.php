@@ -1,6 +1,6 @@
 <?php
 
-namespace Grossnab\Helper\Entity\DataManager;
+namespace Itgro\Entity\DataManager;
 
 use Bitrix\Main\Entity\DataManager as BaseDataManager;
 use CDBResult;

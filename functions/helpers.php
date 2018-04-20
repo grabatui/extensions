@@ -51,7 +51,7 @@ if (!function_exists('get_iblock_id')) {
      */
     function get_iblock_id($code)
     {
-        if (!Loader::includeModule('itgro')) {
+        if (!Loader::includeModule('extensions')) {
             return 0;
         }
 
@@ -69,7 +69,7 @@ if (!function_exists('get_highload_iblock_id')) {
      */
     function get_highload_iblock_id($name)
     {
-        if (!Loader::includeModule('itgro')) {
+        if (!Loader::includeModule('extensions')) {
             return 0;
         }
 
@@ -88,7 +88,7 @@ if (!function_exists('get_property_id')) {
      */
     function get_property_id($propertyCode, $iBlockCode = null)
     {
-        if (!Loader::includeModule('itgro')) {
+        if (!Loader::includeModule('extensions')) {
             return 0;
         }
 
