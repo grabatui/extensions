@@ -38,6 +38,8 @@ abstract class Base
     protected $groupBy = false;
     protected $navParams = false;
 
+    protected $original;
+
     protected $wrapElements = true;
 
     public function __call($name, $arguments)
@@ -117,12 +119,12 @@ abstract class Base
             $this->select = $this->defaultSelect;
         }
 
-        $objects = $this->getObjects();
+        $this->original = $this->getObjects();
 
         $method = ($withProcessing) ? 'GetNext' : 'Fetch';
 
         $result = [];
-        while ($item = $objects->{$method}()) {
+        while ($item = $this->original->{$method}()) {
             $entity = ($this->wrapElements && $this instanceof Entity) ?
                 $this::create(array_get($item, 'ID'), $item) :
                 $item;
@@ -137,12 +139,19 @@ abstract class Base
 
     public function getOne($withProcessing = true)
     {
-        $this->expandNavParams(['nTopCount' => 1]);
+        $this->expandOneItemParameters();
 
         $items = $this->getMany($withProcessing);
 
         return (!empty($items)) ? reset($items) : null;
     }
 
+    public function getOriginal()
+    {
+        return $this->original;
+    }
+
     abstract protected function getObjects(): CDBResult;
+
+    abstract protected function expandOneItemParameters();
 }

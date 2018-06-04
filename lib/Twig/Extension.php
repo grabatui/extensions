@@ -16,7 +16,7 @@ class Extension
 
     const EXPAND_HANDLERS_EVENT = 'onCreateTwigExtensionsList';
 
-    public static $handlers = [
+    public $handlers = [
         Functions::class,
         Filters::class,
     ];

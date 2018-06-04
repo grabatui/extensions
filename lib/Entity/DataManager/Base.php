@@ -28,6 +28,11 @@ abstract class Base extends BaseEntity
         return $CDBResult;
     }
 
+    protected function expandOneItemParameters()
+    {
+        $this->expandNavParams(['limit' => 1]);
+    }
+
     private function createParameters(): array
     {
         $parameters = array_filter([

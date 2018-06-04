@@ -33,6 +33,11 @@ abstract class Base extends BaseEntity
         );
     }
 
+    protected function expandOneItemParameters()
+    {
+        $this->expandNavParams(['nTopCount' => 1]);
+    }
+
     public function getCount(): int
     {
         $this->withGroupBy([]);
@@ -85,15 +90,22 @@ abstract class Base extends BaseEntity
     public function add($fields): int
     {
         $fields = array_merge(
-            $fields,
             [
                 'ACTIVE' => 'Y',
                 'IBLOCK_ID' => get_iblock_id($this->iBlockCode),
-            ]
+            ],
+            $fields
         );
 
         $CIBlockElement = new CIBlockElement();
-        return $CIBlockElement->Add($fields);
+
+        $result = $CIBlockElement->Add($fields);
+
+        if (!$result) {
+            throw new Exception($CIBlockElement->LAST_ERROR);
+        }
+
+        return $result;
     }
 
     protected function clearAlreadyShown($sectionId = null)

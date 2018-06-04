@@ -146,16 +146,16 @@ if (!function_exists('array_get')) {
             return $array[$key];
         }
 
-        $result = $array;
-        foreach (explode('.', $key) as $innerKey) {
-            if (is_array($result) && array_key_exists($innerKey, $result)) {
-                $result = $result[$innerKey];
-            } else {
-                return $default;
-            }
+        $key = explode('.', $key);
+        $innerKey = array_shift($key);
+
+        if (array_key_exists($innerKey, $array)) {
+            $array = $array[$innerKey];
+        } else {
+            return $default;
         }
 
-        return $result;
+        return array_get($array, implode('.', $key));
     }
 }
 
