@@ -1,31 +1,28 @@
 <?php
 
-namespace Itgro\Bitrix;
+namespace Itgro\Bitrix\Sale;
 
-use Bitrix\Iblock\IblockTable;
-use Bitrix\Main\Loader;
+use Bitrix\Sale\Internals\OrderPropsTable;
 use Itgro\WithCachedEntities;
 
-class Iblock
+class OrderProperty
 {
     use WithCachedEntities;
 
     public static function getByCode($code)
     {
-        if (!Loader::includeModule('iblock')) {
-            return 0;
-        }
+        check_modules('sale');
 
         if (self::cacheHas($code)) {
             return self::cacheGet($code);
         }
 
-        $iBlock = IblockTable::getRow([
+        $property = OrderPropsTable::getRow([
             'filter' => ['=CODE' => $code],
             'select' => ['ID'],
         ]);
 
-        self::cacheSet($code, (!empty($iBlock)) ? $iBlock['ID'] : 0);
+        self::cacheSet($code, (!empty($property)) ? $property['ID'] : 0);
 
         return self::cacheGet($code);
     }

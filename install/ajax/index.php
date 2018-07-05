@@ -14,4 +14,8 @@ try {
     $result = $exception->getMessage();
 }
 
+if (is_object($result) && method_exists($result, 'toArray')) {
+    $result = $result->toArray();
+}
+
 die(json_encode($result));

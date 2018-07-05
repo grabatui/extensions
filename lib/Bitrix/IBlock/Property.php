@@ -1,6 +1,6 @@
 <?php
 
-namespace Itgro\Bitrix;
+namespace Itgro\Bitrix\IBlock;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\Loader;
@@ -72,9 +72,7 @@ class Property
 
     public static function getByCode($code, $iBlock = null)
     {
-        if (!Loader::includeModule('iblock')) {
-            return 0;
-        }
+        check_modules('iblock');
 
         if ($iBlock && !is_numeric($iBlock) && strlen($iBlock) > 0) {
             $iBlock = get_iblock_id($iBlock);

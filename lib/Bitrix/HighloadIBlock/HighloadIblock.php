@@ -1,6 +1,6 @@
 <?php
 
-namespace Itgro\Bitrix;
+namespace Itgro\Bitrix\HighloadIBlock;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
@@ -12,9 +12,7 @@ class HighloadIblock
 
     public static function getByName($name)
     {
-        if (!Loader::includeModule('highloadblock')) {
-            return 0;
-        }
+        check_modules('highloadblock');
 
         if (self::cacheHas($name)) {
             return self::cacheGet($name);

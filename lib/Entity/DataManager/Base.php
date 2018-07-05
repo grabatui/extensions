@@ -20,10 +20,10 @@ abstract class Base extends BaseEntity
 
     protected function getObjects(): CDBResult
     {
-        $rsUsers = $this->dataManager->getList($this->createParameters());
+        $rsItems = $this->dataManager->getList($this->createParameters());
 
         $CDBResult = new CDBResult();
-        $CDBResult->InitFromArray($rsUsers->fetchAll());
+        $CDBResult->InitFromArray($rsItems->fetchAll());
 
         return $CDBResult;
     }
@@ -45,10 +45,12 @@ abstract class Base extends BaseEntity
         return array_merge(
             $parameters,
             // В $this->navParams доступны лишь перечисленные ниже ключи. Остальные - не используются
-            array_intersect_key(
-                $this->getNavParams(),
-                array_flip(['limit', 'offset', 'count_total', 'runtime', 'data_doubling', 'cache'])
-            )
+            (!empty($this->getNavParams())) ?
+                array_intersect_key(
+                    $this->getNavParams(),
+                    array_flip(['limit', 'offset', 'count_total', 'runtime', 'data_doubling', 'cache'])
+                ) :
+                []
         );
     }
 }

@@ -10,6 +10,8 @@ use Itgro\Entity\Base as BaseEntity;
 
 abstract class Base extends BaseEntity
 {
+    use WithEvents;
+
     private $alreadyTriedGetRandom = false;
 
     public function __construct()
