@@ -1,0 +1,6 @@
+function {{ name }}({{ parameters|join(',') }})
+{
+    $newParameters = {{ class }}::call({{ parameters|join(',') }});
+
+    return sprintf('{{ name }}(%s);', (!empty($newParameters)) ? implode(',', $newParameters) : '');
+}

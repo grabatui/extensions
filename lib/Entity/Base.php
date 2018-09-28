@@ -108,6 +108,11 @@ abstract class Base
         return $this;
     }
 
+    public function getIBlockId()
+    {
+        return get_iblock_id($this->getIBlockCode());
+    }
+
     public function getIBlockCode()
     {
         return $this->iBlockCode;

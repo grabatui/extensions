@@ -11,14 +11,17 @@
 3) Для корректной работы twig-шаблонов, необходимо выполнить инструкцию по настройке с **[maximaster/tools.twig](https://github.com/maximaster/tools.twig/blob/master/docs/configuration.md)**
 
 4) Для работы ajax-роутера необходимо добавить в `urlrewrite.php` (желательно повыше):
-```php
-array(
-    'CONDITION' => '#^\/ajax\/([^\/]*)#',
-    'RULE' => 'handler=$1',
-    'ID' => '',
-    'PATH' => '/ajax/index.php',
-),
-```
+    ```php
+    array(
+        'CONDITION' => '#^\/ajax\/([^\/]*)#',
+        'RULE' => 'handler=$1',
+        'ID' => '',
+        'PATH' => '/ajax/index.php',
+    ),
+    ```
+
+5) Для работы динамических агентов необходимо добавить инициализацию ядра агентов посредством `(new \Itgro\Cron\Kernel)->register();`.
+*Внимание!* Сделать это необходимо после создания обработчика для регистрации агентов
 
 ## Какие штуки имеются:
 
@@ -31,12 +34,12 @@ array(
 * `\Itgro\Mail` - отправитель писем как через шаблоны Битрикс, так и через обычную отправку;
 
 * `\Itgro\Router` - класс для возможности хранить все (более-менее простые) ссылки проекта в одном массиве и доставать их через короткий хэлпер. По умолчанию все алиасы хранятся в корне сайта в файле `routes.php`. Путь до этого файла (от корня сайта) можно изменить, объявив константу `EXTENSIONS_ROUTES_PATH`. Массив в `routes.php` имеет очень простую структуру вида:
-```php
-return [
-    'auth' => '/personal/auth/',
-    'register' => '/personal/registration/',
-];
-```
+    ```php
+    return [
+        'auth' => '/personal/auth/',
+        'register' => '/personal/registration/',
+    ];
+    ```
 Т.о. можно через `\Itgro\Router::getByCode('auth')` (или хэлпер `route('auth')`) достать нужный путь;
 
 * `\Itgro\Session` - обёртка для работы с сессией (все данные хранятся не в корне `$_SESSION`, а в подмассиве);
@@ -63,27 +66,40 @@ return [
 #### Расширители классов:
 
 * Возможность добавить свои ajax-обработчики посредством навешивания обработчиков на `\Itgro\Ajax\Distributor::EXPAND_HANDLERS_EVENT`:
-```php
-/**
- * В этом примере будут доступны запросы вида `/ajax/feedback/%method%/`,
- * каждый из которых будет делигироваться в соответствующий класс на соответствующий метод
- */
-event_manager()->addEventHandler('extensions', \Itgro\Ajax\Distributor::EXPAND_HANDLERS_EVENT, function (\Bitrix\Main\Event $event) {
-    return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
-        'feedback' => \Namespace\Some\Class::class,
-    ]);
-})
-```
-Для универсальности данных от ajax-запросов, имеются классы по namespace'у `\Itgro\Ajax\Result\*`. Их можно возвращать в виде ответов ajax-методов и обрабатывать по типу возвращаемого объекта.
+    ```php
+    /**
+     * В этом примере будут доступны запросы вида `/ajax/feedback/%method%/`,
+     * каждый из которых будет делигироваться в соответствующий класс на соответствующий метод
+     */
+    event_manager()->addEventHandler('extensions', \Itgro\Ajax\Distributor::EXPAND_HANDLERS_EVENT, function (\Bitrix\Main\Event $event) {
+        return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
+            'feedback' => \Namespace\Some\Class::class,
+        ]);
+    })
+    ```
+    Для универсальности данных от ajax-запросов, имеются классы по namespace'у `\Itgro\Ajax\Result\*`. Их можно возвращать в виде ответов ajax-методов и обрабатывать по типу возвращаемого объекта.
 
 * Возможность добавить свои функции для Twig'а посредством навешивания обработчиков на `\Itgro\Twig\Extension\Functions::EXPAND_HANDLERS_EVENT`:
-```php
-event_manager()->addEventHandler('extensions', \Itgro\Twig\Extension\Functions::CREATE_HANDLERS_LIST_EVENT, function (\Bitrix\Main\Event $event) {
-    return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
-        'foo_func' => ['\Namespace\Some\Class::class', 'fooFunc'],
-        'bar_func' => ['\Namespace\Some\Second\Class::class', 'barFunc'],
-    ]);
-})
-```
+    ```php
+    event_manager()->addEventHandler('extensions', \Itgro\Twig\Extension\Functions::CREATE_HANDLERS_LIST_EVENT, function (\Bitrix\Main\Event $event) {
+        return new \Bitrix\Main\EventResult(\Bitrix\Main\EventResult::SUCCESS, [
+            'foo_func' => [\Namespace\Some\Class::class, 'fooFunc'],
+            'bar_func' => [\Namespace\Some\Second\Class::class, 'barFunc'],
+        ]);
+    })
+    ```
 
 * Возможность добавить свои фильтры для Twig'а посредством навешивания обработчиков на `\Itgro\Twig\Extension\Filters::EXPAND_HANDLERS_EVENT`. Код будет выглядеть примерно как в коде выше.
+
+* Возможность создавать динамические агенты через классы. Каждый такой класс должен быть дочерним от класса `\Itgro\Cron\Agent` и иметь метод `call()`. Если Ваш агент должен принимать параметры и возвращать их же - делаете это в этом же методе.<br>
+Само название функции либо можно прописать явно в параметре `name` агента-класса, либо само имя класса приведётся к camel_case'у, из-за чего имя функции преобразуется вида `\Itgro\Cron\Agent -> itgro_cron_agent`.
+
+* Возможность добавить своих агентов-классы через стандартную инциализацию:
+    ```php
+    event_manager()->addEventHandler('extensions', \Itgro\Cron\Kernel::EXPAND_HANDLERS_EVENT, function () {
+        return new EventResult(EventResult::SUCCESS, [
+            \Namespace\Some\FirstAgent::class,
+            \Namespace\Some\SecondAgent::class,
+        ]);
+    });
+    ```

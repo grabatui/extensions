@@ -1,6 +1,6 @@
 <?php require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
 
-if (mb_strtolower(array_get($_SERVER, 'HTTP_X_REQUESTED_WITH', '')) !== 'xmlhttprequest') {
+if (!is_ajax()) {
     abort_404();
 }
 
