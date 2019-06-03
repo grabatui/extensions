@@ -32,6 +32,11 @@ abstract class Entity extends Base
         $this->id = $id;
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function setFields($fields)
     {
         $this->fields = $fields;
