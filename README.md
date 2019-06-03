@@ -6,11 +6,9 @@
 
 1) `composer require itgro/extensions`
 
-2) Для работы мигаций, необходимо выполнить инструкции по установке с **[arrilot/bitrix-migrations](https://github.com/arrilot/bitrix-migrations)**
+2) Для корректной работы twig-шаблонов, необходимо выполнить инструкцию по настройке с **[maximaster/tools.twig](https://github.com/maximaster/tools.twig/blob/master/docs/configuration.md)**
 
-3) Для корректной работы twig-шаблонов, необходимо выполнить инструкцию по настройке с **[maximaster/tools.twig](https://github.com/maximaster/tools.twig/blob/master/docs/configuration.md)**
-
-4) Для работы ajax-роутера необходимо добавить в `urlrewrite.php` (желательно повыше):
+3) Для работы ajax-роутера необходимо добавить в `urlrewrite.php` (желательно повыше):
     ```php
     array(
         'CONDITION' => '#^\/ajax\/([^\/]*)#',
@@ -20,7 +18,7 @@
     ),
     ```
 
-5) Для работы динамических агентов необходимо добавить инициализацию ядра агентов посредством `(new \Itgro\Cron\Kernel)->register();`.
+4) Для работы динамических агентов необходимо добавить инициализацию ядра агентов посредством `(new \Itgro\Cron\Kernel)->register();`.
 *Внимание!* Сделать это необходимо после создания обработчика для регистрации агентов
 
 ## Какие штуки имеются:
