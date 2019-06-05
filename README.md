@@ -75,6 +75,12 @@
         ]);
     })
     ```
+    Или даже проще:
+    ```php
+    \Itgro\Ajax\Distributor::setHandlers([
+        'feedback' =>\Namespace\Some\Class::class,
+    ]);
+    ```
     Для универсальности данных от ajax-запросов, имеются классы по namespace'у `\Itgro\Ajax\Result\*`. Их можно возвращать в виде ответов ajax-методов и обрабатывать по типу возвращаемого объекта.
 
 * Возможность добавить свои функции для Twig'а посредством навешивания обработчиков на `\Itgro\Twig\Extension\Functions::EXPAND_HANDLERS_EVENT`:
@@ -85,6 +91,12 @@
             'bar_func' => [\Namespace\Some\Second\Class::class, 'barFunc'],
         ]);
     })
+    ```
+    Или даже проще:
+    ```php
+    \Itgro\Twig\Extension\Functions::setHandlers([
+        'foo_func' => [\Namespace\Some\Class::class, 'fooFunc'],
+    ]);
     ```
 
 * Возможность добавить свои фильтры для Twig'а посредством навешивания обработчиков на `\Itgro\Twig\Extension\Filters::EXPAND_HANDLERS_EVENT`. Код будет выглядеть примерно как в коде выше.
@@ -101,3 +113,43 @@
         ]);
     });
     ```
+    Или даже проще:
+    ```php
+    \Itgro\Cron\Kernel::setHandlers([
+        \Namespace\Some\Agent::class,
+    ]);
+    ```
+
+#### Манипуляции с административной панелью:
+
+* Манипуляция с определённым свойством на странице редактирования элемента:
+    ```php
+    (new \Namespace\IBlockExtended\Entity)->addElementPropertyInformation(
+        'IBLOCK_PROPERTY_CODE', // Код свойства, для которого отрабатывается js-функция
+        function ($propertyId) {
+            // JavaScript-код или JavaScript-функция, которые будут обрабатываться только на странице, где есть свойство с указанным кодом
+            return 'javascriptFunctionName';
+        }
+    )
+    ```
+
+* Добавление кнопки на страницу связанных сущностей с фильтрацией по текущей сущности на страницу редактирования элемента
+    ```php
+    (new \Namespace\IBlockExtended\Entity)->addElementAdminButton(
+        (new \Itgro\Bitrix\Admin\Button\ElementEdit)
+            ->withProperties([
+                'iblock_type' => 'iblock_type_id', // Тип ИБ связанной страницы
+                'iblock_code' => 'iblock_code', // Код ИБ связанной страницы
+                'filter' => [
+                    // Фильтр по текущей сущности
+                    ['type' => 'property', 'code' => 'RELATED_PROPERTY_CODE'],
+                ],
+            ])
+            ->withView([
+                'place' => 'before', // Добавлять до или после кнопки копирования
+                'style' => 'adm-btn-green', // Доп.классы для кнопки
+                'name' => 'Элементы', // Заголовок кнопки
+            ])
+    );
+    ```
+    

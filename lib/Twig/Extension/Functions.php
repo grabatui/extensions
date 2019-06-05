@@ -14,7 +14,7 @@ class Functions implements CanHandle
 
     const EXPAND_HANDLERS_EVENT = 'onCreateTwigFunctionsList';
 
-    protected $handlers = [
+    protected static $handlers = [
         'include_file' => [self::class, 'includeFile'],
         'include_editable_file' => [self::class, 'includeEditableFile'],
         'option' => [self::class, 'getOption'],

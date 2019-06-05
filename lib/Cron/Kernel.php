@@ -13,10 +13,12 @@ class Kernel
 
     const EXPAND_HANDLERS_EVENT = 'onCollectDynamicAgents';
 
-    private $handlers = [];
+    protected static $handlers = [];
 
-    public function register()
+    public function register($handlers = [])
     {
+        static::$handlers = ($handlers) ? $handlers : [];
+
         foreach ($this->getHandlers() as $handler) {
             if (!class_exists($handler)) {
                 continue;
@@ -28,7 +30,7 @@ class Kernel
                 continue;
             }
 
-            list($class, $name, $parameters) = $handler->getInitialSettings();
+            list($class, $name, $parameters, $functionParameters) = $handler->getInitialSettings();
 
             if (!method_exists($class, 'call')) {
                 continue;
@@ -38,6 +40,7 @@ class Kernel
                 'name' => $name,
                 'class' => $class,
                 'parameters' => (!empty($parameters)) ? $parameters : [],
+                'function_parameters' => (!empty($functionParameters)) ? $functionParameters : [],
             ]);
 
             try {

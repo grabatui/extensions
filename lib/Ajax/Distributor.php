@@ -12,6 +12,8 @@ class Distributor
 
     const EXPAND_HANDLERS_EVENT = 'onCreateAjaxHandlersList';
 
+    protected static $handlers = [];
+
     public static function handleFromRequest()
     {
         $parts = explode('/', request()->get('handler'));

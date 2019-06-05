@@ -29,7 +29,6 @@ use Itgro\Entity\IBlock\Entity;
  */
 abstract class Base
 {
-    protected $iBlockCode;
     protected $defaultSelect = null;
 
     protected $order = [];
@@ -106,16 +105,6 @@ abstract class Base
         $this->{$field} = $value;
 
         return $this;
-    }
-
-    public function getIBlockId()
-    {
-        return get_iblock_id($this->getIBlockCode());
-    }
-
-    public function getIBlockCode()
-    {
-        return $this->iBlockCode;
     }
 
     public function getMany($withProcessing = true, $byColumn = 'ID')

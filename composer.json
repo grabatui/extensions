@@ -2,7 +2,7 @@
   "name": "itgro/extensions",
   "description": "Помощник при работе с 1С-Битрикс",
   "license": "MIT",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "version_date": "05.06.2019",
   "type": "itgro-module",
   "authors": [
