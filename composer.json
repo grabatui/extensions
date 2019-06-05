@@ -2,8 +2,8 @@
   "name": "itgro/extensions",
   "description": "Помощник при работе с 1С-Битрикс",
   "license": "MIT",
-  "version": "1.5.2",
-  "version_date": "03.06.2019",
+  "version": "1.5.3",
+  "version_date": "05.06.2019",
   "type": "itgro-module",
   "authors": [
     {
@@ -14,7 +14,7 @@
   "require": {
     "php": ">=7.0.0",
     "itgro/installer": "*@dev",
-    "maximaster/tools.twig": "^1.1",
+    "maximaster/tools.twig": "1.1.0",
     "nesbot/carbon": "^2.16.3"
   },
   "prefer-stable": true,
