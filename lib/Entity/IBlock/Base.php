@@ -11,10 +11,7 @@ use Itgro\Entity\Base as BaseEntity;
 
 abstract class Base extends BaseEntity
 {
-    use WithEvents {
-        __call as public callMethod;
-    }
-
+    use WithEvents;
     use WithRandomShow;
     use WithAdditionalExtensions;
 

@@ -43,14 +43,6 @@ abstract class Base
 
     public function __call($name, $arguments)
     {
-        if (method_exists($this, 'callMethod')) {
-            $result = $this->callMethod();
-
-            if (!is_null($result)) {
-                return $result;
-            }
-        }
-
         $aliases = [
             'get' => 'getQueryProperty',
             'expand' => 'expandQueryProperty',

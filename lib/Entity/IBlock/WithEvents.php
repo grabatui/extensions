@@ -49,6 +49,12 @@ trait WithEvents
 
     public function __call($name, $arguments)
     {
+        $parentCall = parent::__call($name, $arguments);
+
+        if ($parentCall) {
+            return $parentCall;
+        }
+
         if (!array_key_exists($name, $this->eventHandlers) || count($arguments) < 1) {
             return null;
         }
@@ -61,7 +67,7 @@ trait WithEvents
 
         $this->addEvent($eventName, $checkCallback, $callback, $sort, $module);
 
-        return true;
+        return $this;
     }
 
     public function checkWithParams($params, $isSection = false)
