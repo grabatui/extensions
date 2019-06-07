@@ -13,6 +13,8 @@ class Filters implements CanHandle
 
     const EXPAND_HANDLERS_EVENT = 'onCreateTwigFiltersList';
 
+    protected static $handlers = [];
+
     public static function handle(Twig_Environment $engine)
     {
         foreach ((new self)->getHandlers() as $filter => $filterHandler) {
