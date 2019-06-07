@@ -50,7 +50,7 @@ trait WithEvents
     public function __call($name, $arguments)
     {
         if (!array_key_exists($name, $this->eventHandlers) || count($arguments) < 1) {
-            throw new BadMethodCallException();
+            return null;
         }
 
         $callback = $arguments[0];
@@ -60,6 +60,8 @@ trait WithEvents
         list($eventName, $checkCallback, $module) = array_get($this->eventHandlers, $name);
 
         $this->addEvent($eventName, $checkCallback, $callback, $sort, $module);
+
+        return true;
     }
 
     public function checkWithParams($params, $isSection = false)
