@@ -57,6 +57,11 @@ abstract class Entity extends Base
         return $this->getField(sprintf('PROPERTY_%s_ENUM', $key));
     }
 
+    public function getPropertyEnumId($key)
+    {
+        return $this->getField(sprintf('PROPERTY_%s_ENUM_ID', $key));
+    }
+
     public function getPropertyXmlId($key)
     {
         return $this->getField(sprintf('PROPERTY_%s_XML_ID', $key));

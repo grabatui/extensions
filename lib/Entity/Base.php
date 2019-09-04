@@ -3,7 +3,6 @@
 namespace Itgro\Entity;
 
 use CDBResult;
-use Itgro\Entity\IBlock\Entity;
 
 /**
  * @see Base::getQueryProperty()
@@ -119,7 +118,7 @@ abstract class Base
 
         $result = [];
         while ($item = $this->original->{$method}()) {
-            $entity = ($this->wrapElements && $this instanceof Entity) ?
+            $entity = ($this->wrapElements && method_exists($this, 'create')) ?
                 $this::create(array_get($item, 'ID'), $item) :
                 $item;
 

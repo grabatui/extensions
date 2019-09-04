@@ -18,7 +18,7 @@ class Filters implements CanHandle
     public static function handle(Twig_Environment $engine)
     {
         foreach ((new self)->getHandlers() as $filter => $filterHandler) {
-            $engine->addFunction(new Twig_SimpleFilter($filter, $filterHandler));
+            $engine->addFilter(new Twig_SimpleFilter($filter, $filterHandler));
         }
     }
 }

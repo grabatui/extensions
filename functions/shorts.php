@@ -35,7 +35,7 @@ if (!function_exists('user')) {
     {
         global $USER;
 
-        return $USER;
+        return ($USER) ?? new CUser();
     }
 }
 
